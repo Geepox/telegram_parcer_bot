@@ -6,7 +6,7 @@ import os
 import openpyxl
 
 
-token = '1792508263:AAGbFGJcYb8VedM8Sl04HsizlZu4vd03Sa8'
+token = '5555555:AAAAAAAAAAaaaaaaaaaaAAAAAAAA'
 
 bot = telebot.TeleBot(token)
 
