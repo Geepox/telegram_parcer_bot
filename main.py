@@ -81,7 +81,6 @@ def parse_phones(user_id, url, file_name):
                 cell.value = value_price
                 cell = sheet.cell(row=j, column=5)
                 cell.value = value_link
-                print(product_id, name, price, link)
         except AttributeError:
             break
         i += 1
