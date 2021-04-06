@@ -6,7 +6,7 @@ import os
 import openpyxl
 
 
-token = '5555555:AAAAAAAAAAaaaaaaaaaaAAAAAAAA'
+token = '1792508263:AAHa3SbMTeHm_EIrMWDmY0SaVhWN18Qu0AQ'
 
 bot = telebot.TeleBot(token)
 
@@ -49,40 +49,44 @@ def parse_phones(user_id, url, file_name):
     cell = sheet.cell(row=j, column=5)
     cell.value = 'LINK'
 
-    while i < 19:
-        url = str(url).format(i)
+    while i < 50:
+        url_1 = str(url).format(i)
 
-        browser.get(url)
+        r = browser.get(url_1)
         html = browser.page_source
-        result = []
 
         soup = BeautifulSoup(html, 'lxml')
-        divs = soup.find('div', class_="item-cards-grid__cards").find_all('div', class_="item-card ddl_product ddl_product_link undefined")
+        try:
+            divs = soup.find('div', class_="item-cards-grid__cards").find_all('div',
+                                                                              class_="item-card ddl_product ddl_product_link undefined")
 
-        for d in divs:
-            price = d.find('span', class_="item-card__prices-price").text.replace(' ', '').replace('₸', '')
-            name = d.find('a', class_="item-card__name-link").text
-            product_id = d.get('data-product-id')
-            link = d.find('a', class_='item-card__name-link').get('href')
+            for d in divs:
+                price = d.find('span', class_="item-card__prices-price").text.replace(' ', '').replace('₸', '')
+                name = d.find('a', class_="item-card__name-link").text
+                product_id = d.get('data-product-id')
+                link = d.find('a', class_='item-card__name-link').get('href')
 
-            j += 1
-            value_price = price
-            value_product_id = product_id
-            value_name = name
-            value_link = link
-            cell = sheet.cell(row=j, column=1)
-            cell.value = j
-            cell = sheet.cell(row=j, column=2)
-            cell.value = value_product_id
-            cell = sheet.cell(row=j, column=3)
-            cell.value = value_name
-            cell = sheet.cell(row=j, column=4)
-            cell.value = value_price
-            cell = sheet.cell(row=j, column=5)
-            cell.value = value_link
+                j += 1
+                value_price = price
+                value_product_id = product_id
+                value_name = name
+                value_link = link
+                cell = sheet.cell(row=j, column=1)
+                cell.value = j
+                cell = sheet.cell(row=j, column=2)
+                cell.value = value_product_id
+                cell = sheet.cell(row=j, column=3)
+                cell.value = value_name
+                cell = sheet.cell(row=j, column=4)
+                cell.value = value_price
+                cell = sheet.cell(row=j, column=5)
+                cell.value = value_link
+                print(product_id, name, price, link)
+        except AttributeError:
+            break
         i += 1
-        wb.save('C:/Users/Bruce/PycharmProjects/untitled/pythonProject/Telebot_parcer/' + str(user_id) +
-                str(file_name) + str(user_id) + '.xlsx')
+    wb.save('C:/Users/Bruce/PycharmProjects/untitled/pythonProject/Telebot_parcer/' + str(user_id) +
+            str(file_name) + str(user_id) + '.xlsx')
 
 
 @bot.message_handler(content_types=["text"])
@@ -134,9 +138,9 @@ def menu_parse(message):
             path = "C:/Users/Bruce/PycharmProjects/untitled/pythonProject/Telebot_parcer/" + str(
                 message.from_user.id)
             os.mkdir(path)
-            url = "https://kaspi.kz/shop/c/smartphones/?q=%3AproductClass%3AApple+iPhone&page={}"
+            url_name = "https://kaspi.kz/shop/c/smartphones/?q=%3AproductClass%3AApple+iPhone&page={}"
             file_name = "/apple_data_"
-            parse_phones(message.from_user.id, url, file_name)
+            parse_phones(message.from_user.id, url_name, file_name)
             bot.send_message(message.chat.id, "Ваш файл готов")
             file = open(path + file_name + str(message.from_user.id) + '.xlsx', 'rb')
             bot.send_document(message.chat.id, file)
@@ -150,9 +154,9 @@ def menu_parse(message):
             path = "C:/Users/Bruce/PycharmProjects/untitled/pythonProject/Telebot_parcer/" + str(
                 message.from_user.id)
             os.mkdir(path)
-            url = "https://kaspi.kz/shop/c/notebooks/?q=%3AproductClass%3A%D0%98%D0%B3%D1%80%D0%BE%D0%B2%D1%8B%D0%B5&amp;page={}"
+            url_name = "https://kaspi.kz/shop/c/notebooks/?q=%3AproductClass%3A%D0%94%D0%BB%D1%8F+%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%8B+%D0%B8+%D1%83%D1%87%D1%91%D0%B1%D1%8B&page={}"
             file_name = "/laptop_data_"
-            parse_phones(message.from_user.id, url, file_name)
+            parse_phones(message.from_user.id, url_name, file_name)
             bot.send_message(message.chat.id, "Ваш файл готов")
             file = open(path + file_name + str(message.from_user.id) + '.xlsx', 'rb')
             bot.send_document(message.chat.id, file)
